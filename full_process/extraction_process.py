@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 import time
 import argparse
 import logging
+import warnings
+warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger(__name__)
@@ -31,7 +33,7 @@ def extract_process_behaviour(keyword, location, starting_date, requester : Tren
             new_data['Country'] = location
             flag = True
         except Exception as error:
-            #import pdb; pdb.set_trace()
+            
             logger.info(f"Error {error} has happened while extracting keyword behaviour")
             logger.info(f'Waiting 15 seconds for the next {location} behaviour request')
             time.sleep(15)
@@ -48,7 +50,7 @@ def extract_process_similar_subject(keyword, location, requester : TrendReq = Tr
             top, rising = new_data[subject]['top'], new_data[subject]['rising']
             flag = True
         except Exception as error:
-            #import pdb; pdb.set_trace()
+            
             logger.info(f"Error {error} has happened")
             logger.info(f'Waiting 15 seconds for {location} request while extracting top and rising terms')
             time.sleep(15)
@@ -63,7 +65,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     KEY = args.keyword
-    import pdb; pdb.set_trace()
+    
     starting_date = (datetime.now() - timedelta(days=365*3)).strftime('%Y-%m-%d')
 
     logger.info('Starting Extraction Process')
@@ -78,10 +80,10 @@ if __name__ == '__main__':
         
         logger.info(f'Extracting {country} keyword top and rising topics')
         top, rising = extract_process_similar_subject(KEY, country)
-        #import pdb; pdb.set_trace()
+        
         top.to_csv(f'./tmp/{country}_top_{KEY}.csv',index=False)
         rising.to_csv(f'./tmp/{country}_rising_{KEY}.csv',index=False)
-        logger.info(f'Extraction {country} keyword top and rising topics')
+        logger.info(f'Extraction {country} keyword top and rising topics DONE')
 
         
         logger.info(f'Ending {country} extraction')
